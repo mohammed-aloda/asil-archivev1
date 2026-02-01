@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (min-width: 768px) {
+  body {
+    /* Hide default cursor globally only on desktop */
+    cursor: none;
+  }
+
+  /* Hide default cursor on interactive elements to prevent "hand" cursor on desktop */
+  a,
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"] {
+    cursor: none !important;
+  }
+}
+
+/* Restore default cursor for text inputs */
+input,
+textarea,
+[contenteditable="true"] {
+  cursor: text;
+}
+
+.btn-gold {
+  @apply px-8 py-3 bg-transparent border border-asl-espresso text-asl-espresso font-serif tracking-widest text-sm uppercase transition-all duration-300;
+  border-radius: 0;
+  /* Sharp edges */
+}
+
+.theme-dark .btn-gold {
+  @apply border-asl-dark-gold text-asl-dark-gold;
+}
+
+.btn-gold:hover {
+  @apply bg-asl-espresso text-asl-gold;
+  box-shadow: 0 0 15px rgba(194, 178, 128, 0.4);
+}
+
+.theme-dark .btn-gold:hover {
+  @apply bg-asl-dark-gold text-asl-dark-bg;
+}
+
+.btn-press {
+  @apply active:scale-95 transition-transform duration-100;
+}
+
+:root {
+  /* Light Mode Defaults */
+  --noise-color: #000000;
+  --noise-opacity: 0.03;
+  --shadow-color: rgba(61, 43, 31, 0.1);
+  --shadow-glow: none;
+}
+
+.theme-dark {
+  /* Dark Mode Overrides */
+  --noise-color: #FFFFFF;
+  --noise-opacity: 0.02;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 15px rgba(212, 175, 55, 0.3);
+  /* Gold Glow */
+}
+
+/* Transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in-out;
+}
+
+@keyframes noise {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -5%);
+  }
+
+  20% {
+    transform: translate(-10%, 5%);
+  }
+
+  30% {
+    transform: translate(5%, -10%);
+  }
+
+  40% {
+    transform: translate(-5%, 15%);
+  }
+
+  50% {
+    transform: translate(-10%, 5%);
+  }
+
+  60% {
+    transform: translate(15%, 0);
+  }
+
+  70% {
+    transform: translate(0, 10%);
+  }
+
+  80% {
+    transform: translate(-15%, 0);
+  }
+
+  90% {
+    transform: translate(10%, 5%);
+  }
+
+  100% {
+    transform: translate(5%, 0);
+  }
+}
+
+.bg-noise {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200%;
+  /* Dynamic SVG noise that takes current color via mask or keeping standard noise and using mix-blend-mode */
+  background: transparent url('https://grainy-gradients.vercel.app/noise.svg') repeat 0 0;
+  background-size: 200px 200px;
+  animation: noise 0.2s infinite;
+  opacity: var(--noise-opacity);
+  pointer-events: none;
+  z-index: 50;
+  /* Invert filter for dark mode if needed, or handle via simple opacity */
+  /* For black vs white noise, we can use filters */
+}
+
+.theme-dark .bg-noise {
+  filter: invert(1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5DC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C2B280;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3D2B1F;
+}
+
+/* Animations */
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
