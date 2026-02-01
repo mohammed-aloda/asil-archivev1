@@ -66,7 +66,7 @@ const CustomRequest: React.FC = () => {
 
     try {
       // Sending to backend on port 4242
-      const response = await fetch('http://localhost:4242/api/send-request', {
+      const response = await fetch('/api/send-request', {
         method: 'POST',
         body: data,
       });

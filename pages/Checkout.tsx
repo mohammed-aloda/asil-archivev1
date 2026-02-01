@@ -29,7 +29,7 @@ const Checkout: React.FC = () => {
             }
 
             // Call Backend to create session
-            const response = await fetch('http://localhost:4242/api/create-checkout-session', {
+            const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

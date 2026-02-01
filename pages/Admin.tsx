@@ -93,7 +93,7 @@ const Admin: React.FC = () => {
 
         setIsSyncing(true);
         try {
-            const response = await fetch('http://localhost:4242/api/products/sync-stripe', {
+            const response = await fetch('/api/sync-stripe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
