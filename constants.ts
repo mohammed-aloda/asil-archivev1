@@ -1,7 +1,7 @@
 export const PRODUCTS: Product[] = [
   {
     "name": "IRAQ Origins (Pre-Order)",
-    "price": 1,
+    "price": 79.99,
     "category": "Cultural",
     "origin": "IRAQ",
     "description": "Woven with the hues of rose-red stone, this silk tunic embodies the endurance of the Nabataeans.",

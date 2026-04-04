@@ -224,12 +224,15 @@ const Admin: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Price</label>
+                                <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Price (CAD)</label>
                                 <input
                                     type="number"
                                     name="price"
                                     value={formData.price}
                                     onChange={handleChange}
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="0.00"
                                     className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
                                     required
                                 />
@@ -388,7 +391,7 @@ const Admin: React.FC = () => {
                             <div className="flex-1">
                                 <div className="flex justify-between items-start">
                                     <h4 className="text-lg font-serif text-asl-espresso dark:text-asl-dark-text">{product.name}</h4>
-                                    <span className="text-sm font-sans">${product.price}</span>
+                                    <span className="text-sm font-sans">CAD ${product.price.toFixed(2)}</span>
                                 </div>
                                 <p className="text-xs uppercase tracking-widest text-asl-gold mt-1">{product.category}</p>
                                 {product.images && product.images.length > 0 && (
