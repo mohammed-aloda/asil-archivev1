@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
@@ -17,36 +17,44 @@ const ProductDetail: React.FC = () => {
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 });
   const { addToCart, toggleCart } = useCart();
-  const { showToast } = useToast(); // Hook
+  const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = React.useState('M');
+  const [activeImageIndex, setActiveImageIndex] = React.useState(0);
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+  const product = products.find(p => p.id === id);
+
+  // Build full image gallery from image + images[]
+  const allImages = product
+    ? [product.image, ...(product.images || [])].filter(Boolean)
+    : [];
 
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, selectedSize);
       showToast(`Added ${product.name} to collection`, 'success');
-      // toggleCart(); // Optional: Open cart immediately
     }
   };
-
-  // ... (lines 27-155)
-
-  <button
-    onClick={handleAddToCart}
-    className="w-full py-4 bg-asl-espresso text-white uppercase tracking-widest text-xs hover:bg-asl-gold transition-colors dark:bg-asl-dark-gold dark:text-asl-dark-bg btn-press"
-  >
-    Add to Collection
-  </button>
-
-  // ... existing Zoom/Pan logic
 
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.5, 3));
   const handleZoomOut = () => {
     setZoom(prev => {
       const newZoom = Math.max(prev - 0.5, 1);
-      if (newZoom === 1) setPosition({ x: 0, y: 0 }); // Reset position on full zoom out
+      if (newZoom === 1) setPosition({ x: 0, y: 0 });
       return newZoom;
     });
+  };
+
+  const handlePrevImage = () => {
+    setActiveImageIndex(prev => (prev === 0 ? allImages.length - 1 : prev - 1));
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleNextImage = () => {
+    setActiveImageIndex(prev => (prev === allImages.length - 1 ? 0 : prev + 1));
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -59,40 +67,27 @@ const ProductDetail: React.FC = () => {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging && zoom > 1) {
       e.preventDefault();
-      setPosition({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
-      });
+      setPosition({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
     }
   };
 
   const handleMouseUp = () => setIsDragging(false);
   const handleMouseLeave = () => setIsDragging(false);
 
-  // Touch handlers for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     if (zoom > 1) {
       setIsDragging(true);
-      // Use the first touch point
       setDragStart({ x: e.touches[0].clientX - position.x, y: e.touches[0].clientY - position.y });
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (isDragging && zoom > 1) {
-      // Prevent default to stop scrolling while dragging
-      // Note: might need 'touch-action: none' CSS on the container for this to work effectively
-
-      setPosition({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y
-      });
+      setPosition({ x: e.touches[0].clientX - dragStart.x, y: e.touches[0].clientY - dragStart.y });
     }
   };
 
   const handleTouchEnd = () => setIsDragging(false);
-
-  const product = products.find(p => p.id === id);
 
   if (!product) {
     return (
@@ -103,6 +98,8 @@ const ProductDetail: React.FC = () => {
     );
   }
 
+  const imageLabels = ['Front', 'Back', 'Detail', 'Detail 2', 'Detail 3'];
+
   return (
     <div className="min-h-screen pt-24 px-4 sm:px-6 max-w-7xl mx-auto">
       <Link to="/shop" className="inline-flex items-center text-xs uppercase tracking-widest text-asl-espresso/60 hover:text-asl-gold transition-colors mb-8 dark:text-asl-dark-text/60">
@@ -111,9 +108,11 @@ const ProductDetail: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 pb-12">
         <div className="space-y-4 w-full lg:w-[70%] mx-auto lg:mx-0">
+
+          {/* Main Image */}
           <div className="aspect-[3/4] bg-asl-paper dark:bg-asl-dark-walnut relative overflow-hidden group rounded-sm shadow-sm">
             <div
-              className="w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
+              className="w-full h-full flex items-center justify-center"
               style={{
                 transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
                 cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
@@ -127,8 +126,39 @@ const ProductDetail: React.FC = () => {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover pointer-events-none" />
+              <img
+                src={allImages[activeImageIndex]}
+                alt={`${product.name} - ${imageLabels[activeImageIndex] || `View ${activeImageIndex + 1}`}`}
+                className="w-full h-full object-cover pointer-events-none transition-opacity duration-300"
+              />
             </div>
+
+            {/* Image Label Badge */}
+            <div className="absolute top-3 left-3">
+              <span className="text-[10px] uppercase tracking-widest bg-white/80 dark:bg-black/60 text-asl-espresso dark:text-asl-dark-text px-2 py-1">
+                {imageLabels[activeImageIndex] || `View ${activeImageIndex + 1}`}
+              </span>
+            </div>
+
+            {/* Prev / Next arrows — only shown if multiple images */}
+            {allImages.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevImage}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/80 dark:bg-black/60 text-asl-espresso dark:text-asl-dark-text hover:bg-asl-gold hover:text-white transition-colors opacity-0 group-hover:opacity-100 rounded-sm"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/80 dark:bg-black/60 text-asl-espresso dark:text-asl-dark-text hover:bg-asl-gold hover:text-white transition-colors opacity-0 group-hover:opacity-100 rounded-sm"
+                  aria-label="Next image"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </>
+            )}
 
             {/* Zoom Controls */}
             <div className="absolute bottom-2 right-2 flex gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
@@ -148,6 +178,26 @@ const ProductDetail: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {/* Thumbnail Row — only shown if multiple images */}
+          {allImages.length > 1 && (
+            <div className="flex gap-2">
+              {allImages.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => { setActiveImageIndex(i); setZoom(1); setPosition({ x: 0, y: 0 }); }}
+                  className={`flex-1 aspect-square overflow-hidden rounded-sm border-2 transition-all ${
+                    activeImageIndex === i
+                      ? 'border-asl-gold dark:border-asl-dark-gold opacity-100'
+                      : 'border-transparent opacity-50 hover:opacity-80'
+                  }`}
+                  aria-label={imageLabels[i] || `View ${i + 1}`}
+                >
+                  <img src={img} alt={imageLabels[i] || `View ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Details Section */}
