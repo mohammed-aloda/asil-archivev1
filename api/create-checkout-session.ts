@@ -22,7 +22,7 @@ export default async function handler(
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
-    const exchangeRate = currency === 'CAD' ? 1.40 : 1;
+    const exchangeRate = currency === 'USD' ? (1 / 1.40) : 1; // Prices stored in CAD
 
     // Map cart items to Stripe line items
     const lineItems = cart.map((item: any) => ({

@@ -5,8 +5,8 @@ type Currency = 'CAD' | 'USD';
 interface CurrencyContextType {
     currency: Currency;
     setCurrency: (currency: Currency) => void;
-    formatPrice: (amountInUSD: number) => string;
-    convertPrice: (amountInUSD: number) => number;
+    formatPrice: (amountInCAD: number) => string;
+    convertPrice: (amountInCAD: number) => number;
     exchangeRate: number;
 }
 
@@ -19,15 +19,16 @@ export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }
     // Default to CAD as requested
     const [currency, setCurrency] = useState<Currency>('CAD');
 
-    const convertPrice = (amountInUSD: number): number => {
-        if (currency === 'CAD') {
-            return amountInUSD * EXCHANGE_RATE_CAD;
+    // Prices are stored in CAD. Convert to USD if needed.
+    const convertPrice = (amountInCAD: number): number => {
+        if (currency === 'USD') {
+            return amountInCAD / EXCHANGE_RATE_CAD;
         }
-        return amountInUSD;
+        return amountInCAD; // Already CAD, no conversion needed
     };
 
-    const formatPrice = (amountInUSD: number): string => {
-        const convertedAmount = convertPrice(amountInUSD);
+    const formatPrice = (amountInCAD: number): string => {
+        const convertedAmount = convertPrice(amountInCAD);
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: currency,
