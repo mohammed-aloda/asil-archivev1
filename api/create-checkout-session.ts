@@ -42,7 +42,7 @@ export default async function handler(
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${process.env.CLIENT_URL || 'https://asilarchive.com'}/#/shop?success=true`, // Redirect to Shop with success flag
+      success_url: `${process.env.CLIENT_URL || 'https://asilarchive.com'}/#/checkout?success=true`,
       cancel_url: `${process.env.CLIENT_URL || 'https://asilarchive.com'}/#/checkout?canceled=true`,
       shipping_address_collection: {
         allowed_countries: ['CA', 'US', 'GB', 'FR', 'AE', 'SA', 'QA'], // Added common regions, customize as needed

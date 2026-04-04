@@ -1,39 +1,45 @@
-import React, { useState } from 'react';
-import { useCart } from '../context/CartContext'; // Adjust path if necessary
-import { useTheme } from '../context/ThemeContext'; // Adjust path if necessary
+import React, { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
+import { useTheme } from '../context/ThemeContext';
 import { useCurrency } from '../context/CurrencyContext';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Lock } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ArrowLeft, CreditCard, Lock, CheckCircle, XCircle } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Initialize Stripe
 const stripePromise = loadStripe('pk_test_51SulfM2Mo4rJhbYqpHr6WoGQV1HEq9Nu0oMGNxrS1ofmGuLppNB8ZA17MqHU4XpDQeb0CbzMW9FNqyUdBDBcBK4A00kAVg43n2');
 
-
 const Checkout: React.FC = () => {
-    const { cart, cartTotal } = useCart();
+    const { cart, cartTotal, clearCart } = useCart();
     const { theme } = useTheme();
     const { currency, formatPrice } = useCurrency();
-    const navigate = useNavigate();
     const [isProcessing, setIsProcessing] = useState(false);
+    const location = useLocation();
 
-    const handlePayment = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const searchParams = new URLSearchParams(location.search);
+    const isSuccess = searchParams.get('success') === 'true';
+    const isCanceled = searchParams.get('canceled') === 'true';
+
+    // Clear cart when payment is confirmed successful
+    useEffect(() => {
+        if (isSuccess) {
+            clearCart();
+        }
+    }, [isSuccess]);
+
+    const handlePayment = async () => {
         setIsProcessing(true);
 
         try {
             const stripe = await stripePromise;
             if (!stripe) {
-                alert("Stripe blocked or failed to load. If you are on a mobile phone testing with a local IP (e.g., 192.168...), Stripe requires HTTPS. Try using a tunnel (ngrok) or test on localhost.");
-                throw new Error("Stripe failed to load - likely non-HTTPS environment");
+                alert("Stripe blocked or failed to load. If you are testing locally, make sure you're using HTTPS.");
+                throw new Error("Stripe failed to load");
             }
 
-            // Call Backend to create session
             const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ cart, currency }),
             });
 
@@ -50,37 +56,89 @@ const Checkout: React.FC = () => {
                 return;
             }
 
-            // Redirect to Stripe (Server-Side URL)
             if (session.url) {
                 window.location.href = session.url;
             } else {
                 throw new Error("No checkout URL returned from server");
             }
 
-
         } catch (error) {
             console.error("Checkout Error:", error);
-
             let msg = error instanceof Error ? error.message : String(error);
             if (msg.includes("Failed to fetch")) {
-                msg = "Cannot connect to server. Ensure your computer and phone are on the same network and the server is running on the correct IP/port.";
+                msg = "Cannot connect to server. Please try again.";
             }
-
             alert(`Checkout Failed: ${msg}`);
             setIsProcessing(false);
         }
     };
 
-
-    if (cart.length === 0) {
+    // --- SUCCESS SCREEN ---
+    if (isSuccess) {
         return (
-            <div className="min-h-screen pt-32 px-6 text-center">
-                <h2 className="text-3xl font-serif text-asl-espresso dark:text-asl-dark-text mb-4">Your Cart is Empty</h2>
-                <Link to="/shop" className="text-asl-gold hover:underline">Return to Collection</Link>
+            <div className="min-h-screen pt-32 pb-20 px-6 flex flex-col items-center justify-center text-center">
+                <div className="max-w-lg mx-auto">
+                    <CheckCircle
+                        size={72}
+                        className="mx-auto mb-8 text-asl-gold dark:text-asl-dark-gold"
+                        strokeWidth={1}
+                    />
+                    <h1 className="text-4xl font-serif text-asl-espresso dark:text-asl-dark-text mb-4">
+                        Thank You for Your Order
+                    </h1>
+                    <p className="text-asl-espresso/60 dark:text-asl-dark-text/60 text-sm leading-relaxed mb-10">
+                        Your payment was successful. We've received your order and will begin preparing it shortly.
+                        You'll receive a confirmation email from Stripe with your order details.
+                    </p>
+                    <Link
+                        to="/shop"
+                        className="inline-block text-xs uppercase tracking-widest border-b border-asl-espresso pb-1 hover:text-asl-gold hover:border-asl-gold transition-colors dark:text-asl-dark-text dark:border-asl-dark-gold"
+                    >
+                        Continue Shopping
+                    </Link>
+                </div>
             </div>
         );
     }
 
+    // --- CANCELED SCREEN ---
+    if (isCanceled) {
+        return (
+            <div className="min-h-screen pt-32 pb-20 px-6 flex flex-col items-center justify-center text-center">
+                <div className="max-w-lg mx-auto">
+                    <XCircle
+                        size={64}
+                        className="mx-auto mb-8 text-asl-espresso/40 dark:text-asl-dark-text/40"
+                        strokeWidth={1}
+                    />
+                    <h2 className="text-3xl font-serif text-asl-espresso dark:text-asl-dark-text mb-4">
+                        Payment Canceled
+                    </h2>
+                    <p className="text-asl-espresso/60 dark:text-asl-dark-text/60 text-sm mb-10">
+                        Your order was not completed. Your cart has been saved — you can try again whenever you're ready.
+                    </p>
+                    <Link
+                        to="/checkout"
+                        className="inline-block text-xs uppercase tracking-widest border-b border-asl-espresso pb-1 hover:text-asl-gold hover:border-asl-gold transition-colors dark:text-asl-dark-text dark:border-asl-dark-gold"
+                    >
+                        Return to Checkout
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    // --- EMPTY CART ---
+    if (cart.length === 0) {
+        return (
+            <div className="min-h-screen pt-32 px-6 text-center">
+                <h2 className="text-3xl font-serif text-asl-espresso dark:text-asl-dark-text mb-4">Your Cart is Empty</h2>
+                <Link to="/shop" className="text-asl-gold hover:underline text-sm uppercase tracking-widest">Return to Collection</Link>
+            </div>
+        );
+    }
+
+    // --- MAIN CHECKOUT ---
     return (
         <div className="min-h-screen pt-28 pb-20 px-6 max-w-7xl mx-auto">
             <Link to="/shop" className="inline-flex items-center text-xs uppercase tracking-widest text-asl-espresso/60 hover:text-asl-gold transition-colors mb-8 dark:text-asl-dark-text/60">
@@ -143,7 +201,6 @@ const Checkout: React.FC = () => {
                     </button>
                     <div className="mt-6 flex justify-center gap-4 opacity-40">
                         <CreditCard size={24} />
-                        {/* Add other payment icons if desired */}
                     </div>
                 </div>
             </div>
