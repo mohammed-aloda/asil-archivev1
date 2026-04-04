@@ -1,8 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -13,6 +11,11 @@ export default async function handler(
   }
 
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("STRIPE_SECRET_KEY is not defined in the environment variables.");
+    }
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
     const { cart, currency = 'CAD' } = req.body; // Default to CAD
 
     if (!cart || cart.length === 0) {
