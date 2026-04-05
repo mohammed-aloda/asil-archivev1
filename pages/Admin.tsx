@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useTheme } from '../context/ThemeContext';
 import { useProducts } from '../context/ProductContext';
 import { Product } from '../types';
 
 const Admin: React.FC = () => {
-    const { theme } = useTheme();
     const { products, addProduct, updateProduct, deleteProduct } = useProducts();
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
@@ -175,18 +173,18 @@ const Admin: React.FC = () => {
         return (
             <div className="min-h-screen pt-40 px-6 flex items-start justify-center">
                 <form onSubmit={handleLogin} className="text-center space-y-4">
-                    <h2 className="text-2xl font-serif text-asl-espresso dark:text-asl-dark-text">Admin Access</h2>
+                    <h2 className="text-2xl font-serif text-asl-espresso">Admin Access</h2>
                     <input
                         type="password"
                         value={passwordInput}
                         onChange={(e) => setPasswordInput(e.target.value)}
                         placeholder="Enter Password"
-                        className="p-2 border border-asl-stone/50 bg-transparent outline-none focus:border-asl-gold text-asl-espresso dark:text-asl-dark-text"
+                        className="p-2 border border-asl-stone/50 bg-transparent outline-none focus:border-asl-gold text-asl-espresso"
                     />
                     <button type="submit" className="block w-full py-2 bg-asl-espresso text-white text-xs uppercase tracking-widest hover:bg-asl-gold transition-colors">
                         Enter
                     </button>
-                    <p className="text-xs opacity-50 text-asl-espresso dark:text-asl-dark-text">Default password is: admin</p>
+                    <p className="text-xs opacity-50 text-asl-espresso">Default password is: admin</p>
                 </form>
             </div>
         );
@@ -195,7 +193,7 @@ const Admin: React.FC = () => {
     return (
         <div className="min-h-screen pt-24 px-6 max-w-7xl mx-auto" >
             <div className="flex justify-between items-center mb-12">
-                <h2 className="text-4xl font-serif text-asl-espresso dark:text-asl-dark-text">Admin Dashboard</h2>
+                <h2 className="text-4xl font-serif text-asl-espresso">Admin Dashboard</h2>
                 <button
                     onClick={handleExport}
                     className="px-6 py-2 bg-asl-gold text-white uppercase tracking-widest text-xs hover:bg-asl-gold/80 transition-colors"
@@ -206,25 +204,25 @@ const Admin: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {/* Form Section */}
-                <div className={`p-8 border ${theme === 'light' ? 'border-asl-stone/50 bg-white' : 'border-asl-dark-bronze/50 bg-asl-dark-walnut/20'}`}>
-                    <h3 className="text-xl font-serif text-asl-espresso dark:text-asl-dark-text mb-6">
+                <div className="p-8 border border-asl-stone/50 bg-white">
+                    <h3 className="text-xl font-serif text-asl-espresso mb-6">
                         {editingProduct ? 'Edit Product' : 'Add New Product'}
                     </h3>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Name</label>
+                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Name</label>
                             <input
                                 type="text"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 required
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Price (CAD)</label>
+                                <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Price (CAD)</label>
                                 <input
                                     type="number"
                                     name="price"
@@ -233,17 +231,17 @@ const Admin: React.FC = () => {
                                     step="0.01"
                                     min="0"
                                     placeholder="0.00"
-                                    className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                    className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Category</label>
+                                <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Category</label>
                                 <select
                                     name="category"
                                     value={formData.category}
                                     onChange={handleChange}
-                                    className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                    className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 >
                                     <option value="Cultural">Cultural</option>
                                     <option value="Unique">Unique</option>
@@ -252,27 +250,27 @@ const Admin: React.FC = () => {
                             </div>
                         </div>
                         <div>
-                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Origin</label>
+                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Origin</label>
                             <input
                                 type="text"
                                 name="origin"
                                 value={formData.origin}
                                 onChange={handleChange}
-                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 required
                             />
                         </div>
 
                         {/* Main Image */}
                         <div>
-                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Main Image (Auto-formats local paths!)</label>
+                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Main Image (Auto-formats local paths!)</label>
                             <input
                                 type="text"
                                 name="image"
                                 value={formData.image}
                                 onChange={handleChange}
                                 placeholder="Paste local path or URL here"
-                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 required
                             />
                             {formData.image && <p className="text-[10px] sm:text-xs text-asl-gold mt-1">Preview: {formData.image}</p>}
@@ -280,29 +278,29 @@ const Admin: React.FC = () => {
 
                         {/* Additional Images */}
                         <div>
-                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Additional Images</label>
+                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Additional Images</label>
                             <div className="flex gap-2 mb-2">
                                 <input
                                     type="text"
                                     value={extraImageInput}
                                     onChange={(e) => setExtraImageInput(e.target.value)}
                                     placeholder="Add more image paths"
-                                    className="flex-1 p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                    className="flex-1 p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 />
                                 <button
                                     type="button"
                                     onClick={handleAddExtraImage}
-                                    className="px-4 py-2 bg-asl-stone/20 hover:bg-asl-stone/40 text-asl-espresso dark:text-asl-dark-text transition-colors"
+                                    className="px-4 py-2 bg-asl-stone/20 hover:bg-asl-stone/40 text-asl-espresso transition-colors"
                                 >
                                     Add
                                 </button>
                             </div>
                             <div className="space-y-2">
                                 {(formData.images || []).map((img, index) => (
-                                    <div key={index} className="flex items-center justify-between text-xs p-2 bg-asl-stone/10 dark:bg-asl-dark-bronze/10">
+                                    <div key={index} className="flex items-center justify-between text-xs p-2 bg-asl-stone/10">
                                         <div className="flex items-center gap-2 overflow-hidden">
                                             <img src={img} alt="Preview" className="w-8 h-8 object-cover rounded bg-asl-paper" />
-                                            <span className="truncate max-w-[150px] text-asl-espresso dark:text-asl-dark-text" title={img}>{img}</span>
+                                            <span className="truncate max-w-[150px] text-asl-espresso" title={img}>{img}</span>
                                         </div>
                                         <button
                                             type="button"
@@ -317,24 +315,24 @@ const Admin: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Materials</label>
+                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Materials</label>
                             <input
                                 type="text"
                                 name="materials"
                                 value={formData.materials}
                                 onChange={handleChange}
-                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 dark:text-asl-dark-text/60 mb-2">Description</label>
+                            <label className="block text-xs uppercase tracking-widest text-asl-espresso/60 mb-2">Description</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows={4}
-                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors dark:text-asl-dark-text dark:border-asl-dark-bronze"
+                                className="w-full p-2 border border-asl-stone/30 bg-transparent focus:border-asl-gold outline-none transition-colors text-asl-espresso"
                                 required
                             />
                         </div>
@@ -363,7 +361,7 @@ const Admin: React.FC = () => {
                                             stripePriceId: ''
                                         });
                                     }}
-                                    className="px-6 py-3 border border-asl-espresso text-asl-espresso uppercase tracking-widest text-xs hover:bg-asl-espresso hover:text-white transition-colors dark:border-asl-dark-text dark:text-asl-dark-text dark:hover:bg-asl-dark-text dark:hover:text-asl-dark-walnut"
+                                    className="px-6 py-3 border border-asl-espresso text-asl-espresso uppercase tracking-widest text-xs hover:bg-asl-espresso hover:text-white transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -372,7 +370,7 @@ const Admin: React.FC = () => {
                                 type="button"
                                 onClick={handleSyncToStripe}
                                 disabled={isSyncing}
-                                className={`px-4 py-3 border border-asl-gold text-asl-gold uppercase tracking-widest text-xs hover:bg-asl-gold hover:text-white transition-colors dark:border-asl-gold dark:text-asl-gold ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`px-4 py-3 border border-asl-gold text-asl-gold uppercase tracking-widest text-xs hover:bg-asl-gold hover:text-white transition-colors ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 {isSyncing ? 'Syncing...' : 'Sync to Stripe'}
                             </button>
@@ -382,32 +380,32 @@ const Admin: React.FC = () => {
 
                 {/* List Section */}
                 <div className="space-y-4">
-                    <h3 className="text-xl font-serif text-asl-espresso dark:text-asl-dark-text mb-6">Current Inventory</h3>
+                    <h3 className="text-xl font-serif text-asl-espresso mb-6">Current Inventory</h3>
                     {products.map((product) => (
-                        <div key={product.id} className={`flex gap-4 p-4 border ${theme === 'light' ? 'border-asl-stone/30' : 'border-asl-dark-bronze/30'} hover:border-asl-gold transition-colors`}>
+                        <div key={product.id} className="flex gap-4 p-4 border border-asl-stone/30 hover:border-asl-gold transition-colors">
                             <div className="w-20 h-24 bg-gray-200 flex-shrink-0">
                                 <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1">
                                 <div className="flex justify-between items-start">
-                                    <h4 className="text-lg font-serif text-asl-espresso dark:text-asl-dark-text">{product.name}</h4>
+                                    <h4 className="text-lg font-serif text-asl-espresso">{product.name}</h4>
                                     <span className="text-sm font-sans">CAD ${product.price.toFixed(2)}</span>
                                 </div>
                                 <p className="text-xs uppercase tracking-widest text-asl-gold mt-1">{product.category}</p>
                                 {product.images && product.images.length > 0 && (
-                                    <p className="text-[10px] text-asl-espresso/40 dark:text-asl-dark-text/40 mt-1">+{product.images.length} extra images</p>
+                                    <p className="text-[10px] text-asl-espresso/40 mt-1">+{product.images.length} extra images</p>
                                 )}
-                                <p className="text-sm text-asl-espresso/60 dark:text-asl-dark-text/60 mt-2 line-clamp-2">{product.description}</p>
+                                <p className="text-sm text-asl-espresso/60 mt-2 line-clamp-2">{product.description}</p>
                                 <div className="flex gap-4 mt-4">
                                     <button
                                         onClick={() => handleEdit(product)}
-                                        className="text-xs uppercase border-b border-transparent hover:border-asl-gold hover:text-asl-gold transition-colors dark:text-asl-dark-text"
+                                        className="text-xs uppercase border-b border-transparent hover:border-asl-gold hover:text-asl-gold transition-colors text-asl-espresso"
                                     >
                                         Edit
                                     </button>
                                     <button
                                         onClick={() => deleteProduct(product.id)}
-                                        className="text-xs uppercase border-b border-transparent hover:border-red-500 hover:text-red-500 transition-colors text-asl-espresso/40 dark:text-asl-dark-text/40"
+                                        className="text-xs uppercase border-b border-transparent hover:border-red-500 hover:text-red-500 transition-colors text-asl-espresso/40"
                                     >
                                         Delete
                                     </button>

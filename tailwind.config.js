@@ -7,7 +7,6 @@ export default {
         './App.tsx',
         './main.tsx'
     ],
-    darkMode: 'class',
     theme: {
         extend: {
             backgroundImage: {
@@ -15,22 +14,10 @@ export default {
             },
             colors: {
                 asl: {
-                    // Light Mode (Parchment)
                     cream: '#FDFBF7',
                     espresso: '#2C1E16',
                     gold: '#C2B280',
-
-                    // Dark Mode (High Visibility)
-                    'dark-espresso': '#1A1410',
-                    'dark-ivory': '#FFFDF5',
-                    'dark-sand': '#EFEBD8',
-                    'dark-gold': '#E6D5A7',
-
-                    // Legacy/Backwards compatibility
                     stone: '#D2C4A7',
-                    'dark-bronze': '#4E3B31',
-                    'dark-text': '#FFFDF5',
-                    'dark-bg': '#1A1410',
                 },
                 'bright-gold': '#FFD700',
             },

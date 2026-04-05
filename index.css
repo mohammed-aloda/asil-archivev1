@@ -32,17 +32,9 @@ textarea,
   /* Sharp edges */
 }
 
-.theme-dark .btn-gold {
-  @apply border-asl-dark-gold text-asl-dark-gold;
-}
-
 .btn-gold:hover {
   @apply bg-asl-espresso text-asl-gold;
   box-shadow: 0 0 15px rgba(194, 178, 128, 0.4);
-}
-
-.theme-dark .btn-gold:hover {
-  @apply bg-asl-dark-gold text-asl-dark-bg;
 }
 
 .btn-press {
@@ -50,20 +42,8 @@ textarea,
 }
 
 :root {
-  /* Light Mode Defaults */
-  --noise-color: #000000;
   --noise-opacity: 0.03;
   --shadow-color: rgba(61, 43, 31, 0.1);
-  --shadow-glow: none;
-}
-
-.theme-dark {
-  /* Dark Mode Overrides */
-  --noise-color: #FFFFFF;
-  --noise-opacity: 0.02;
-  --shadow-color: rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 15px rgba(212, 175, 55, 0.3);
-  /* Gold Glow */
 }
 
 /* Transitions */
@@ -127,19 +107,12 @@ textarea,
   bottom: -50%;
   width: 200%;
   height: 200%;
-  /* Dynamic SVG noise that takes current color via mask or keeping standard noise and using mix-blend-mode */
   background: transparent url('https://grainy-gradients.vercel.app/noise.svg') repeat 0 0;
   background-size: 200px 200px;
   animation: noise 0.2s infinite;
   opacity: var(--noise-opacity);
   pointer-events: none;
   z-index: 50;
-  /* Invert filter for dark mode if needed, or handle via simple opacity */
-  /* For black vs white noise, we can use filters */
-}
-
-.theme-dark .bg-noise {
-  filter: invert(1);
 }
 
 /* Custom scrollbar */

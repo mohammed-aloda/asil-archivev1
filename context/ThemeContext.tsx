@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 
-type Theme = 'light' | 'dark';
+type Theme = 'light';
 
 interface ThemeContextType {
     theme: Theme;
@@ -10,19 +10,8 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    // Hardcoded to light mode per user request
     const theme: Theme = 'light';
-
-    useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.remove('dark');
-        root.classList.remove('theme-dark');
-        root.classList.add('theme-light');
-    }, []);
-
-    const toggleTheme = () => {
-        // No-op
-    };
+    const toggleTheme = () => { /* no-op */ };
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>

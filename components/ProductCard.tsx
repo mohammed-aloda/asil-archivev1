@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
-import { useTheme } from '../context/ThemeContext';
 import { useCurrency } from '../context/CurrencyContext';
 
 interface ProductCardProps {
@@ -9,10 +8,9 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const { theme } = useTheme();
     const { formatPrice } = useCurrency();
     const [isHovered, setIsHovered] = useState(false);
-    const [hasLoadedSecondary, setHasLoadedSecondary] = useState(false); // Optimization: Start loading only on first hover
+    const [hasLoadedSecondary, setHasLoadedSecondary] = useState(false);
 
     // Determine secondary image
     // If product.images exists and has items, use the first one as the hover image
@@ -29,11 +27,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return (
         <Link
             to={`/product/${product.id}`}
-            className={`block border ${theme === 'light' ? 'border-asl-stone/50' : 'border-asl-dark-bronze/50'} p-4 transition-all hover:border-asl-gold group`}
+            className="block border border-asl-stone/50 p-4 transition-all hover:border-asl-gold group"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="aspect-[3/4] bg-asl-paper dark:bg-asl-dark-walnut mb-4 flex items-center justify-center overflow-hidden relative">
+            <div className="aspect-[3/4] bg-asl-cream mb-4 flex items-center justify-center overflow-hidden relative">
                 {/* Main Image */}
                 <img
                     src={product.image}
@@ -56,12 +54,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 )}
             </div>
 
-            <h3 className="text-lg font-serif text-asl-espresso dark:text-asl-dark-text group-hover:text-asl-gold transition-colors">{product.name}</h3>
+            <h3 className="text-lg font-serif text-asl-espresso group-hover:text-asl-gold transition-colors">{product.name}</h3>
             <p className="text-xs uppercase tracking-widest text-asl-gold mt-1">{product.category}</p>
 
             <div className="flex justify-between items-center mt-4">
-                <span className="text-sm font-sans opacity-70 text-asl-espresso dark:text-asl-dark-text">{formatPrice(product.price)}</span>
-                <span className="text-xs uppercase border-b border-transparent group-hover:border-asl-gold transition-colors text-asl-espresso dark:text-asl-dark-text">View Blueprint</span>
+                <span className="text-sm font-sans opacity-70 text-asl-espresso">{formatPrice(product.price)}</span>
+                <span className="text-xs uppercase border-b border-transparent group-hover:border-asl-gold transition-colors text-asl-espresso">View Blueprint</span>
             </div>
         </Link>
     );

@@ -14,6 +14,8 @@ const UniqueJerseys = lazy(() => import('./pages/UniqueJerseys'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const Country = lazy(() => import('./pages/Country'));
+const ShippingReturns = lazy(() => import('./pages/ShippingReturns'));
+const SizeGuide = lazy(() => import('./pages/SizeGuide'));
 
 import ScrollToTop from './components/ScrollToTop';
 import CustomCursor from './components/CustomCursor';
@@ -28,9 +30,9 @@ import { ToastProvider } from './context/ToastContext';
 const Cart = () => (
   <div className="min-h-[60vh] flex items-center justify-center fade-in-up">
     <div className="text-center">
-      <h2 className="text-3xl font-serif text-asl-espresso dark:text-asl-dark-gold mb-4">Your Selection</h2>
-      <p className="text-asl-espresso/60 dark:text-asl-dark-text/60 mb-8">Your cart is currently empty.</p>
-      <a href="#/shop" className="text-xs uppercase tracking-widest border-b border-asl-espresso pb-1 hover:text-asl-gold hover:border-asl-gold transition-colors dark:text-asl-dark-text dark:border-asl-dark-gold">Return to Shop</a>
+      <h2 className="text-3xl font-serif text-asl-espresso mb-4">Your Selection</h2>
+      <p className="text-asl-espresso/60 mb-8">Your cart is currently empty.</p>
+      <a href="#/shop" className="text-xs uppercase tracking-widest border-b border-asl-espresso pb-1 hover:text-asl-gold hover:border-asl-gold transition-colors text-asl-espresso">Return to Shop</a>
     </div>
   </div>
 );
@@ -53,7 +55,7 @@ const App: React.FC = () => {
                 <CustomCursor />
                 <div className="bg-noise"></div>
                 <MainLayout>
-                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-asl-cream dark:bg-asl-dark-bg"><div className="w-12 h-12 border-2 border-asl-gold rounded-full border-t-transparent animate-spin"></div></div>}>
+                  <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-asl-cream"><div className="w-12 h-12 border-2 border-asl-gold rounded-full border-t-transparent animate-spin"></div></div>}>
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/shop" element={<Shop />} />
@@ -67,7 +69,9 @@ const App: React.FC = () => {
                       <Route path="/cart" element={<Cart />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/admin" element={<Admin />} />
-                      <Route path="/profile" element={<div className="p-20 text-center text-asl-espresso dark:text-asl-dark-text">User Portal Placeholder</div>} />
+                      <Route path="/shipping" element={<ShippingReturns />} />
+                      <Route path="/size-guide" element={<SizeGuide />} />
+                      <Route path="/profile" element={<div className="p-20 text-center text-asl-espresso">User Portal Placeholder</div>} />
                     </Routes>
                   </Suspense>
                 </MainLayout>

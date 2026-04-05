@@ -1,18 +1,15 @@
 import React from 'react';
 import ProductCard from '../components/ProductCard';
-import { useTheme } from '../context/ThemeContext';
 import { useProducts } from '../context/ProductContext';
 
 const UniqueJerseys: React.FC = () => {
-    const { theme } = useTheme();
     const { products } = useProducts();
-
     const uniqueProducts = products.filter(p => p.category === 'Unique');
 
     return (
         <div className="min-h-screen pt-24 px-6 max-w-7xl mx-auto">
-            <h2 className="text-4xl font-serif text-asl-espresso dark:text-asl-dark-ivory mb-4">Unique Jerseys</h2>
-            <p className="text-asl-espresso/70 dark:text-asl-dark-sand mb-12 max-w-2xl text-lg font-light">
+            <h2 className="text-4xl font-serif text-asl-espresso mb-4">Unique Jerseys</h2>
+            <p className="text-asl-espresso/70 mb-12 max-w-2xl text-lg font-light">
                 One-of-a-kind experimental designs fusing modern aesthetics with traditional craftsmanship.
             </p>
 
