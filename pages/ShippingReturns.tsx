@@ -89,8 +89,8 @@ const ShippingReturns: React.FC = () => {
                             <p className="text-base leading-relaxed text-asl-espresso/80 font-light">
                                 The only exception to this rule is if your product arrives damaged or defective. If you
                                 receive a damaged item, please contact us at{' '}
-                                <a href="mailto:support@asiljerseys.com" className="text-asl-gold underline hover:text-asl-espresso transition-colors">
-                                    support@asiljerseys.com
+                                <a href="mailto:asljerseys@gmail.com" className="text-asl-gold underline hover:text-asl-espresso transition-colors">
+                                    asljerseys@gmail.com
                                 </a>{' '}
                                 within <strong>24 hours of delivery</strong> with photos of the damage, and we will
                                 arrange a replacement.
