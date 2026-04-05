@@ -68,8 +68,7 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 text-xs opacity-40">
           <p>&copy; {new Date().getFullYear()} ASIL Global Heritage. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-asl-gold transition-colors">Instagram</a>
-            <a href="#" className="hover:text-asl-gold transition-colors">Twitter</a>
+            <a href="https://www.instagram.com/asil_jerseys/" target="_blank" rel="noopener noreferrer" className="hover:text-asl-gold transition-colors">Instagram</a>
           </div>
         </div>
       </div>
