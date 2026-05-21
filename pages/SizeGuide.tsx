@@ -33,7 +33,7 @@ const SizeGuide: React.FC = () => {
                 {/* Size Table */}
                 <section className="mb-16">
                     <h2 className="text-xl md:text-2xl font-serif text-asl-espresso mb-6 text-center">
-                        Adult (Men) Soccer Uniform — cm
+                        Adult Jersey Sizing — cm
                     </h2>
 
                     <div className="overflow-x-auto">
@@ -41,55 +41,71 @@ const SizeGuide: React.FC = () => {
                             <thead>
                                 <tr className="bg-asl-espresso text-asl-cream">
                                     <th className="px-6 py-4 text-left text-xs uppercase tracking-widest font-semibold border border-asl-espresso/20">
-                                        Measurement
+                                        Size
                                     </th>
                                     <th className="px-6 py-4 text-center text-xs uppercase tracking-widest font-semibold border border-asl-espresso/20">
-                                        S
+                                        Chest 1/2 (cm)
                                     </th>
                                     <th className="px-6 py-4 text-center text-xs uppercase tracking-widest font-semibold border border-asl-espresso/20">
-                                        M
-                                    </th>
-                                    <th className="px-6 py-4 text-center text-xs uppercase tracking-widest font-semibold border border-asl-espresso/20">
-                                        L
-                                    </th>
-                                    <th className="px-6 py-4 text-center text-xs uppercase tracking-widest font-semibold border border-asl-espresso/20">
-                                        XL
-                                    </th>
-                                    <th className="px-6 py-4 text-center text-xs uppercase tracking-widest font-semibold border border-asl-espresso/20">
-                                        2XL
+                                        Length (cm)
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-asl-cream hover:bg-asl-gold/5 transition-colors">
-                                    <td className="px-6 py-4 text-asl-espresso font-medium border border-asl-gold/20">
-                                        Chest <span className="text-asl-espresso/50 text-xs">(1/2 circumference)</span>
+                                    <td className="px-6 py-4 text-asl-espresso font-semibold border border-asl-gold/20">
+                                        S
                                     </td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">49</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">51</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">54</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">56</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">58</td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        51
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        72.5
+                                    </td>
                                 </tr>
                                 <tr className="bg-asl-espresso/5 hover:bg-asl-gold/5 transition-colors">
-                                    <td className="px-6 py-4 text-asl-espresso font-medium border border-asl-gold/20">
-                                        Length <span className="text-asl-espresso/50 text-xs">(jersey)</span>
+                                    <td className="px-6 py-4 text-asl-espresso font-semibold border border-asl-gold/20">
+                                        M
                                     </td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">70</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">72.5</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">75</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">78</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">80</td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        54
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        75
+                                    </td>
                                 </tr>
                                 <tr className="bg-asl-cream hover:bg-asl-gold/5 transition-colors">
-                                    <td className="px-6 py-4 text-asl-espresso font-medium border border-asl-gold/20">
-                                        Shorts Length
+                                    <td className="px-6 py-4 text-asl-espresso font-semibold border border-asl-gold/20">
+                                        L
                                     </td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">46</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">48</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">50</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">52</td>
-                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">54</td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        56
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        78
+                                    </td>
+                                </tr>
+                                <tr className="bg-asl-espresso/5 hover:bg-asl-gold/5 transition-colors">
+                                    <td className="px-6 py-4 text-asl-espresso font-semibold border border-asl-gold/20">
+                                        XL
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        58
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        80
+                                    </td>
+                                </tr>
+                                <tr className="bg-asl-cream hover:bg-asl-gold/5 transition-colors">
+                                    <td className="px-6 py-4 text-asl-espresso font-semibold border border-asl-gold/20">
+                                        2XL
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        60
+                                    </td>
+                                    <td className="px-6 py-4 text-center text-asl-espresso border border-asl-gold/20">
+                                        82
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -103,15 +119,11 @@ const SizeGuide: React.FC = () => {
                         <p>
                             <span className="font-semibold text-asl-espresso uppercase tracking-wide text-xs">Chest:</span>{' '}
                             Measure around the fullest part of your chest, keeping the tape parallel to the ground.
-                            The value in the chart is half the circumference.
+                            The value in the chart represents half the chest circumference (pit-to-pit).
                         </p>
                         <p>
                             <span className="font-semibold text-asl-espresso uppercase tracking-wide text-xs">Jersey Length:</span>{' '}
                             Measured from the highest point of the shoulder down to the hem at the front.
-                        </p>
-                        <p>
-                            <span className="font-semibold text-asl-espresso uppercase tracking-wide text-xs">Shorts Length:</span>{' '}
-                            Measured from the waistband to the hem of the shorts on the outside of the leg.
                         </p>
                     </div>
                 </section>
