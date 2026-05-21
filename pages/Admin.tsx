@@ -95,6 +95,7 @@ const Admin: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${passwordInput}`
                 },
                 body: JSON.stringify(formData),
             });

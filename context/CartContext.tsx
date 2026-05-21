@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Product, CartItem } from '../types';
 
 interface CartContextType {
@@ -18,8 +18,13 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [cart, setCart] = useState<CartItem[]>(() => {
         // Load from local storage
-        const saved = localStorage.getItem('cart');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem('cart');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error("Failed to parse cart from local storage", e);
+            return [];
+        }
     });
     const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -59,8 +64,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const clearCart = () => setCart([]);
     const toggleCart = () => setIsCartOpen(prev => !prev);
 
-    const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+    const cartTotal = useMemo(() => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart]);
+    const cartCount = useMemo(() => cart.reduce((count, item) => count + item.quantity, 0), [cart]);
 
     return (
         <CartContext.Provider value={{

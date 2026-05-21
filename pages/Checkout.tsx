@@ -5,8 +5,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Lock, CheckCircle, XCircle } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 
-// Initialize Stripe
-const stripePromise = loadStripe('pk_test_51SulfM2Mo4rJhbYqpHr6WoGQV1HEq9Nu0oMGNxrS1ofmGuLppNB8ZA17MqHU4XpDQeb0CbzMW9FNqyUdBDBcBK4A00kAVg43n2');
+// Initialize Stripe using an environment variable so you can easily switch between test and live keys
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
 
 const Checkout: React.FC = () => {
     const { cart, cartTotal, clearCart } = useCart();

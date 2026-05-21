@@ -21,6 +21,15 @@ const CustomRequest: React.FC = () => {
     }
   };
 
+  const validateFiles = (newFiles: File[]) => {
+    const totalSize = [...files, ...newFiles].reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > 4 * 1024 * 1024) {
+      alert("Total file size exceeds 4MB limit. Please upload smaller files.");
+      return false;
+    }
+    return true;
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -28,7 +37,9 @@ const CustomRequest: React.FC = () => {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const newFiles = Array.from(e.dataTransfer.files);
-      setFiles((prev) => [...prev, ...newFiles]);
+      if (validateFiles(newFiles)) {
+        setFiles((prev) => [...prev, ...newFiles]);
+      }
     }
   };
 
@@ -36,7 +47,9 @@ const CustomRequest: React.FC = () => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       const newFiles = Array.from(e.target.files);
-      setFiles((prev) => [...prev, ...newFiles]);
+      if (validateFiles(newFiles)) {
+        setFiles((prev) => [...prev, ...newFiles]);
+      }
     }
   };
 

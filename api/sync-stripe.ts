@@ -12,6 +12,12 @@ export default async function handler(
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
+  const authHeader = req.headers.authorization;
+  const expectedPassword = process.env.VITE_ADMIN_PASSWORD || "admin";
+  if (!authHeader || authHeader !== `Bearer ${expectedPassword}`) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   try {
     const product = req.body;
 

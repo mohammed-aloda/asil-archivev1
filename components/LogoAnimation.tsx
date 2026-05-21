@@ -5,13 +5,17 @@ const LogoAnimation: React.FC<{ onComplete?: () => void }> = ({ onComplete }) =>
     const controls = useAnimation();
 
     useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
         const sequence = async () => {
             await controls.start("visible");
             if (onComplete) {
-                setTimeout(onComplete, 2000); // Wait a bit after animation
+                timeoutId = setTimeout(onComplete, 2000); // Wait a bit after animation
             }
         };
         sequence();
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+        };
     }, [controls, onComplete]);
 
     // Animation variants
