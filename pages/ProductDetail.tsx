@@ -18,7 +18,7 @@ const ProductDetail: React.FC = () => {
   const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = React.useState('M');
   const [activeImageIndex, setActiveImageIndex] = React.useState(0);
-  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
   const product = products.find(p => p.id === id);
 
