@@ -23,7 +23,7 @@ const SizeGuide: React.FC = () => {
                     </h1>
                     <p className="mt-6 max-w-xl mx-auto text-base leading-relaxed text-asl-espresso/70 font-light">
                         All measurements are in centimetres (cm). To ensure the best fit, measure yourself
-                        and compare against the chart below. When in doubt, size up.
+                        and compare against the chart below.
                     </p>
                 </div>
 
@@ -130,9 +130,6 @@ const SizeGuide: React.FC = () => {
 
                 {/* Fit tip + CTA */}
                 <div className="border-t border-asl-gold/30 pt-12 text-center space-y-6">
-                    <p className="text-base text-asl-espresso/70 font-light max-w-lg mx-auto">
-                        If you are between sizes or prefer a looser, pitch-ready look, we recommend <strong>sizing up</strong>.
-                    </p>
                     <p className="text-sm text-asl-espresso/50 font-light">
                         Still unsure? Check our{' '}
                         <Link to="/shipping" className="text-asl-gold underline hover:text-asl-espresso transition-colors">

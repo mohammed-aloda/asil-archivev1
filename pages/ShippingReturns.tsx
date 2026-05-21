@@ -122,19 +122,6 @@ const ShippingReturns: React.FC = () => {
                                 before finalizing your purchase.
                             </p>
                         </div>
-
-                        <div className="border-t border-asl-gold/20 pt-4">
-                            <h4 className="text-sm font-sans uppercase tracking-[0.15em] text-asl-espresso font-semibold mb-2">
-                                Fit Tip
-                            </h4>
-                            <p className="text-base leading-relaxed text-asl-espresso/80 font-light">
-                                If you are between sizes or prefer a "pitch-ready" look, we generally recommend
-                                sizing up — but always refer to the specific measurements provided in our{' '}
-                                <Link to="/size-guide" className="text-asl-gold underline hover:text-asl-espresso transition-colors">
-                                    Size Guide
-                                </Link>.
-                            </p>
-                        </div>
                     </div>
                 </section>
 
