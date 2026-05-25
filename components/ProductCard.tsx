@@ -38,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     alt={product.name}
                     loading="lazy"
                     decoding="async"
-                    className={`w-full h-full object-cover transition-opacity duration-500 ease-in-out ${isHovered && hasSecondImage ? 'opacity-0' : 'opacity-100'}`}
+                    className={`w-full h-full object-contain transition-opacity duration-500 ease-in-out ${isHovered && hasSecondImage ? 'opacity-0' : 'opacity-100'}`}
                 />
 
                 {/* Secondary Image (Absolute positioned on top) */}
@@ -49,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         alt={`${product.name} alternate view`}
                         loading="lazy"
                         decoding="async"
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out ${isHovered ? 'opacity-100' : 'opacity-0'}`}
                     />
                 )}
             </div>

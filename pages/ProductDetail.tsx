@@ -127,7 +127,9 @@ const ProductDetail: React.FC = () => {
               <img
                 src={allImages[activeImageIndex]}
                 alt={`${product.name} - ${imageLabels[activeImageIndex] || `View ${activeImageIndex + 1}`}`}
-                className="w-full h-full object-cover pointer-events-none transition-opacity duration-300"
+                className="w-full h-full object-contain pointer-events-none transition-opacity duration-300"
+                style={{ imageRendering: 'auto' }}
+                loading="eager"
               />
             </div>
 
