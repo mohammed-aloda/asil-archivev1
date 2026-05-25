@@ -5,10 +5,8 @@ export const PRODUCTS: Product[] = [
     "category": "Cultural",
     "origin": "IRAQ",
     "description": "Infused with the proud heritage, culture and landmarks of Iraq.",
-    "image": "/images/photo for website/Iraq V1 Front Jersey Photoshop.png",
+    "image": "/images/photo%20for%20website/WebsiteIMG1.jpg",
     "images": [
-      "/images/photo%20for%20website/Iraq%20V2%20back%20Jersey%20Photoshop.png",
-      "/images/photo%20for%20website/WebsiteIMG1.jpg",
       "/images/photo%20for%20website/WebsiteIMG2.jpg",
       "/images/photo%20for%20website/WebsiteIMG3.jpg",
       "/images/photo%20for%20website/WebsiteIMG4.jpg",
