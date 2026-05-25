@@ -53,7 +53,8 @@ const App: React.FC = () => {
               <Router>
                 <ScrollToTop />
                 <CustomCursor />
-                <div className="bg-noise"></div>
+
+
                 <MainLayout>
                   <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-asl-cream"><div className="w-12 h-12 border-2 border-asl-gold rounded-full border-t-transparent animate-spin"></div></div>}>
                     <Routes>
