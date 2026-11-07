@@ -82,8 +82,16 @@ app.post('/api/create-checkout-session', async (req, res) => {
     }
 });
 
-// Sync Product to Stripe
+const escapeHtml = (v) => String(v ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+// Sync Product to Stripe (admin only)
 app.post('/api/products/sync-stripe', async (req, res) => {
+    const expected = process.env.ADMIN_PASSWORD;
+    if (!expected || req.headers.authorization !== `Bearer ${expected}`) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
     try {
         const product = req.body;
 
@@ -122,14 +130,14 @@ app.post('/api/send-request', upload.array('files'), async (req, res) => {
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: 'asljerseys@gmail.com',
-            subject: `New Custom Request from ${name}`,
+            subject: `New Custom Request from ${String(name).replace(/[\r\n]+/g, ' ')}`,
             text: `Name: ${name}\n\nIdea:\n${idea}`,
             html: `
                 <h3>New Custom Request</h3>
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Idea:</strong><br/>${idea.replace(/\n/g, '<br/>')}</p>
+                <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+                <p><strong>Idea:</strong><br/>${escapeHtml(idea).replace(/\n/g, '<br/>')}</p>
             `,
-            attachments: files.map(file => ({
+            attachments: (files || []).map(file => ({
                 filename: file.originalname,
                 content: file.buffer
             }))

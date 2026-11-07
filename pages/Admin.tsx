@@ -6,10 +6,10 @@ const Admin: React.FC = () => {
     const { products, addProduct, updateProduct, deleteProduct } = useProducts();
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-    // Simple Client-Side Security
+    // The password is checked on the server (/api/admin-login); it is never stored in the site code.
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [passwordInput, setPasswordInput] = useState('');
-    const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin";
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     // MOVE ALL HOOKS HERE - BEFORE ANY RETURN
     const [formData, setFormData] = useState<Omit<Product, 'id'>>({
@@ -28,12 +28,25 @@ const Admin: React.FC = () => {
 
     const [extraImageInput, setExtraImageInput] = useState('');
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (passwordInput === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-        } else {
-            alert("Incorrect Password");
+        if (!passwordInput || isLoggingIn) return;
+        setIsLoggingIn(true);
+        try {
+            const response = await fetch('/api/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: passwordInput }),
+            });
+            if (response.ok) {
+                setIsAuthenticated(true);
+            } else {
+                alert("Incorrect Password");
+            }
+        } catch (error) {
+            alert("Could not reach the server. Please try again.");
+        } finally {
+            setIsLoggingIn(false);
         }
     };
 
@@ -180,12 +193,12 @@ const Admin: React.FC = () => {
                         value={passwordInput}
                         onChange={(e) => setPasswordInput(e.target.value)}
                         placeholder="Enter Password"
+                        autoComplete="current-password"
                         className="p-2 border border-asl-stone/50 bg-transparent outline-none focus:border-asl-gold text-asl-espresso"
                     />
-                    <button type="submit" className="block w-full py-2 bg-asl-espresso text-white text-xs uppercase tracking-widest hover:bg-asl-gold transition-colors">
-                        Enter
+                    <button type="submit" disabled={isLoggingIn} className="block w-full py-2 bg-asl-espresso text-white text-xs uppercase tracking-widest hover:bg-asl-gold transition-colors disabled:opacity-50">
+                        {isLoggingIn ? 'Checking...' : 'Enter'}
                     </button>
-                    <p className="text-xs opacity-50 text-asl-espresso">Default password is: admin</p>
                 </form>
             </div>
         );

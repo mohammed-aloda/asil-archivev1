@@ -8,8 +8,33 @@ export const config = {
   },
 };
 
-// Use memory storage
-const upload = multer({ storage: multer.memoryStorage() });
+const MAX_FILES = 5;
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB (Vercel caps request bodies at ~4.5MB)
+const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic', 'image/heif', 'application/pdf'];
+
+// Use memory storage with limits so the endpoint can't be abused with huge or dangerous uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { files: MAX_FILES, fileSize: MAX_FILE_SIZE, fields: 10, fieldSize: 20000 },
+  fileFilter: (_req, file, cb) => {
+    if (ALLOWED_MIME.includes(file.mimetype)) cb(null, true);
+    else cb(new Error('Only images or PDF files can be attached.'));
+  },
+});
+
+// Escape user input before putting it into the HTML email
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function cleanFilename(name: string): string {
+  return String(name || 'attachment').replace(/[^\w.\- ]+/g, '_').slice(0, 100);
+}
 
 // Helper to run middleware
 function runMiddleware(req: any, res: any, fn: any) {
@@ -53,31 +78,51 @@ export default async function handler(
     });
 
     // Run multer middleware to parse files
-    await runMiddleware(req, res, upload.array('files'));
+    try {
+      await runMiddleware(req, res, upload.array('files', MAX_FILES));
+    } catch (uploadError: any) {
+      const msg = uploadError?.code === 'LIMIT_FILE_SIZE'
+        ? 'Each file must be under 4MB.'
+        : uploadError?.code === 'LIMIT_FILE_COUNT'
+          ? `You can attach up to ${MAX_FILES} files.`
+          : uploadError?.message === 'Only images or PDF files can be attached.'
+            ? uploadError.message
+            : 'Could not read the uploaded files.';
+      return res.status(400).json({ error: msg });
+    }
 
-    const { name, idea } = (req as any).body;
-    const files = (req as any).files;
+    const body = (req as any).body || {};
+    const name = typeof body.name === 'string' ? body.name.trim().slice(0, 100) : '';
+    const idea = typeof body.idea === 'string' ? body.idea.trim().slice(0, 5000) : '';
+    const files = ((req as any).files || []) as any[];
+
+    if (!name || !idea) {
+      return res.status(400).json({ error: 'Name and idea are required.' });
+    }
+
+    // Strip line breaks so the name can't inject extra email headers
+    const safeSubjectName = name.replace(/[\r\n]+/g, ' ');
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: 'asljerseys@gmail.com',
-      subject: `New Custom Request from ${name}`,
+      subject: `New Custom Request from ${safeSubjectName}`,
       text: `Name: ${name}\n\nIdea:\n${idea}`,
       html: `
         <h3>New Custom Request</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Idea:</strong><br/>${idea ? idea.replace(/\n/g, '<br/>') : ''}</p>
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Idea:</strong><br/>${escapeHtml(idea).replace(/\n/g, '<br/>')}</p>
       `,
-      attachments: files ? files.map((file: any) => ({
-        filename: file.originalname,
+      attachments: files.map((file: any) => ({
+        filename: cleanFilename(file.originalname),
         content: file.buffer
-      })) : []
+      }))
     };
 
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Email sent successfully' });
   } catch (error: any) {
     console.error("Email Error:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Could not send your request. Please try again later.' });
   }
 }

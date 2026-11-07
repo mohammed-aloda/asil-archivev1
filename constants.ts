@@ -1,3 +1,5 @@
+import type { Product } from './types';
+
 export const PRODUCTS: Product[] = [
   {
     "name": "IRAQ Origins ",
