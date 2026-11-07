@@ -1,6 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkle } from 'lucide-react';
+import { PRODUCTS } from '../constants';
+import { thumb, thumbFallback } from '../utils/images';
+
+// The featured jersey is always the first product's first photo
+const featured = PRODUCTS[0];
 
 const Home: React.FC = () => {
     return (
@@ -70,10 +75,11 @@ const Home: React.FC = () => {
                             Explore the Collection
                         </Link>
                     </div>
-                    <Link to="/product/1" className="aspect-[4/5] bg-asl-espresso/5 flex items-center justify-center border border-asl-gold/20 relative group overflow-hidden cursor-pointer">
+                    <Link to={`/product/${featured?.id ?? ''}`} className="aspect-[4/5] bg-asl-espresso/5 flex items-center justify-center border border-asl-gold/20 relative group overflow-hidden cursor-pointer">
                         <img
-                            src="/images/thumbs/WebsiteIMG1.webp"
-                            alt="Iraq Origins Jersey"
+                            src={thumb(featured?.image)}
+                            onError={thumbFallback(featured?.image || '')}
+                            alt={featured?.name?.trim() || 'Featured jersey'}
                             loading="lazy"
                             decoding="async"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
