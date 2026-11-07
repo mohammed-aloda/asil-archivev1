@@ -3,6 +3,7 @@ import { X, Trash2, Plus, Minus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { Link } from 'react-router-dom';
+import { thumb, thumbFallback } from '../utils/images';
 
 const CartDrawer: React.FC = () => {
     const { cart, isCartOpen, toggleCart, removeFromCart, updateQuantity, cartTotal } = useCart();
@@ -46,7 +47,7 @@ const CartDrawer: React.FC = () => {
                             <div key={`${item.id}-${item.size}`} className="flex gap-4">
                                 {/* Image */}
                                 <div className="w-24 h-32 bg-asl-stone/10 flex-shrink-0 overflow-hidden">
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                    <img src={thumb(item.image)} onError={thumbFallback(item.image)} alt={item.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                                 </div>
 
                                 {/* Details */}

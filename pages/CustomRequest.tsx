@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 
 const CustomRequest: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', idea: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [honeypot, setHoneypot] = useState(''); // hidden anti-spam field
 
   // File Upload State
   const [files, setFiles] = useState<File[]>([]);
@@ -21,7 +22,23 @@ const CustomRequest: React.FC = () => {
     }
   };
 
+  // One preview URL per image, released when files change (avoids a memory leak)
+  const previews = useMemo(
+    () => files.map((f) => (f.type.startsWith('image/') ? URL.createObjectURL(f) : '')),
+    [files]
+  );
+  useEffect(() => () => previews.forEach((u) => u && URL.revokeObjectURL(u)), [previews]);
+
   const validateFiles = (newFiles: File[]) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic', 'image/heif', 'application/pdf'];
+    if (newFiles.some((f) => !allowed.includes(f.type))) {
+      alert("Only JPG, PNG, WEBP, GIF, HEIC images or PDF files can be uploaded.");
+      return false;
+    }
+    if (files.length + newFiles.length > 5) {
+      alert("You can attach up to 5 files.");
+      return false;
+    }
     const totalSize = [...files, ...newFiles].reduce((acc, file) => acc + file.size, 0);
     if (totalSize > 4 * 1024 * 1024) {
       alert("Total file size exceeds 4MB limit. Please upload smaller files.");
@@ -36,7 +53,7 @@ const CustomRequest: React.FC = () => {
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const newFiles = Array.from(e.dataTransfer.files);
+      const newFiles = Array.from(e.dataTransfer.files) as File[];
       if (validateFiles(newFiles)) {
         setFiles((prev) => [...prev, ...newFiles]);
       }
@@ -46,7 +63,7 @@ const CustomRequest: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      const newFiles = Array.from(e.target.files);
+      const newFiles = Array.from(e.target.files) as File[];
       if (validateFiles(newFiles)) {
         setFiles((prev) => [...prev, ...newFiles]);
       }
@@ -73,6 +90,7 @@ const CustomRequest: React.FC = () => {
     const data = new FormData();
     data.append('name', formData.name);
     data.append('idea', formData.idea);
+    data.append('website', honeypot);
     files.forEach((file) => {
       data.append('files', file);
     });
@@ -124,6 +142,10 @@ const CustomRequest: React.FC = () => {
     <div className="min-h-screen pt-32 px-6 max-w-2xl mx-auto">
       <h2 className="text-3xl font-serif text-asl-espresso mb-8 text-center">Bespoke Commission</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Anti-spam honeypot: hidden from people, bots fill it in */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
+        </div>
         <div className="space-y-2">
           <label className="text-xs uppercase tracking-widest text-asl-espresso">Name</label>
           <input
@@ -131,6 +153,8 @@ const CustomRequest: React.FC = () => {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
+            maxLength={100}
+            autoComplete="name"
             className="w-full bg-transparent border-b border-asl-stone py-2 outline-none focus:border-asl-gold transition-colors text-asl-espresso"
           />
         </div>
@@ -140,6 +164,7 @@ const CustomRequest: React.FC = () => {
             value={formData.idea}
             onChange={(e) => setFormData({ ...formData, idea: e.target.value })}
             required
+            maxLength={5000}
             className="w-full bg-transparent border-b border-asl-stone py-2 outline-none focus:border-asl-gold transition-colors h-32 text-asl-espresso"
           />
         </div>
@@ -160,7 +185,7 @@ const CustomRequest: React.FC = () => {
               ref={inputRef}
               type="file"
               multiple
-              accept="image/*,.pdf"
+              accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,application/pdf"
               className="hidden"
               onChange={handleChange}
             />
@@ -170,7 +195,7 @@ const CustomRequest: React.FC = () => {
               <p className="text-sm">
                 <span className="font-semibold text-asl-gold">Click to upload</span> or drag and drop
               </p>
-              <p className="text-xs opacity-50">SVG, PNG, JPG or PDF (MAX. 10MB)</p>
+              <p className="text-xs opacity-50">PNG, JPG, WEBP or PDF (up to 5 files, 4MB total)</p>
             </div>
           </div>
 
@@ -183,7 +208,7 @@ const CustomRequest: React.FC = () => {
                     <div className="w-8 h-8 bg-asl-paper rounded flex items-center justify-center flex-shrink-0">
                       {file.type.startsWith('image/') ? (
                         <img
-                          src={URL.createObjectURL(file)}
+                          src={previews[index]}
                           alt="Preview"
                           className="w-full h-full object-cover rounded"
                         />

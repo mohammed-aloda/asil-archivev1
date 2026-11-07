@@ -5,6 +5,7 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { thumb, thumbFallback } from '../utils/images';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
@@ -193,7 +194,7 @@ const ProductDetail: React.FC = () => {
                   }`}
                   aria-label={imageLabels[i] || `View ${i + 1}`}
                 >
-                  <img src={img} alt={imageLabels[i] || `View ${i + 1}`} className="w-full h-full object-cover" />
+                  <img src={thumb(img)} onError={thumbFallback(img)} alt={imageLabels[i] || `View ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

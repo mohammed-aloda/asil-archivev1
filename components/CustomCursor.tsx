@@ -12,7 +12,14 @@ const CustomCursor: React.FC = () => {
   const opacityValue = useMotionValue(1);
   const prevPosition = useRef({ x: 0, y: 0 });
 
+  // Only show the custom cursor on devices with a real mouse
+  const [enabled] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(hover: hover) and (pointer: fine)').matches
+  );
+
   useEffect(() => {
+    if (!enabled) return;
     const mouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
 
@@ -56,7 +63,9 @@ const CustomCursor: React.FC = () => {
     return () => {
       window.removeEventListener("mousemove", mouseMove);
     };
-  }, [cursorX, cursorY, rotateValue, opacityValue]);
+  }, [enabled, cursorX, cursorY, rotateValue, opacityValue]);
+
+  if (!enabled) return null;
 
   return (
     <motion.div

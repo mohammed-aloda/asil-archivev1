@@ -3,10 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Lock, CheckCircle, XCircle } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
-
-// Initialize Stripe using an environment variable so you can easily switch between test and live keys
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
+import { thumb, thumbFallback } from '../utils/images';
 
 const Checkout: React.FC = () => {
     const { cart, cartTotal, clearCart } = useCart();
@@ -29,24 +26,21 @@ const Checkout: React.FC = () => {
         setIsProcessing(true);
 
         try {
-            const stripe = await stripePromise;
-            if (!stripe) {
-                alert("Stripe blocked or failed to load. If you are testing locally, make sure you're using HTTPS.");
-                throw new Error("Stripe failed to load");
-            }
-
             const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cart, currency }),
+                // Only ids, sizes and quantities are sent; the server sets the prices
+                body: JSON.stringify({
+                    currency,
+                    cart: cart.map(({ id, size, quantity }) => ({ id, size, quantity })),
+                }),
             });
 
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(`Server returned ${response.status}: ${errText}`);
-            }
+            const session = await response.json().catch(() => ({}));
 
-            const session = await response.json();
+            if (!response.ok) {
+                throw new Error(session.error || `Server returned ${response.status}`);
+            }
 
             if (session.error) {
                 alert(`Payment Error: ${session.error}`);
@@ -154,7 +148,7 @@ const Checkout: React.FC = () => {
                             <div key={`${item.id}-${item.size}`} className="flex gap-4">
                                 <div className="w-16 h-20 bg-asl-stone/10 flex-shrink-0 relative overflow-hidden">
                                     <span className="absolute top-0 right-0 bg-asl-espresso text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-bl-lg z-10">{item.quantity}</span>
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80" />
+                                    <img src={thumb(item.image)} onError={thumbFallback(item.image)} alt={item.name} decoding="async" className="w-full h-full object-cover opacity-80" />
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="font-serif text-asl-espresso text-sm">{item.name}</h3>

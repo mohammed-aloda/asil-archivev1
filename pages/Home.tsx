@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Sparkle } from 'lucide-react';
 
 const Home: React.FC = () => {
     return (
@@ -8,7 +9,7 @@ const Home: React.FC = () => {
             {/* Global Background Texture */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
-                    style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/stardust.png')` }}></div>
+                    style={{ backgroundImage: `url('/assets/stardust.png')` }}></div>
             </div>
 
             {/* --- HERO SECTION --- */}
@@ -16,8 +17,11 @@ const Home: React.FC = () => {
                 {/* Hand-Drawn Landmark Sketch (Hero Only) */}
                 <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
                     <img
-                        src="/assets/bg-for-website.png"
-                        alt="Global Heritage Collage"
+                        src="/assets/bg-for-website.webp"
+                        alt=""
+                        aria-hidden="true"
+                        fetchPriority="high"
+                        decoding="async"
                         className="w-full h-full object-cover object-top translate-x-[-0.3%] filter brightness-110 saturate-[1] contrast-[1.1] mix-blend-multiply opacity-50 transition-opacity duration-1000"
                     />
 
@@ -68,8 +72,10 @@ const Home: React.FC = () => {
                     </div>
                     <Link to="/product/1" className="aspect-[4/5] bg-asl-espresso/5 flex items-center justify-center border border-asl-gold/20 relative group overflow-hidden cursor-pointer">
                         <img
-                            src="/images/photo for website/Iraq V1 Front Jersey Photoshop.png"
+                            src="/images/thumbs/WebsiteIMG1.webp"
                             alt="Iraq Origins Jersey"
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                     </Link>
@@ -81,7 +87,7 @@ const Home: React.FC = () => {
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
                     <div className="order-2 md:order-1 aspect-[4/5] bg-asl-cream flex items-center justify-center border border-asl-gold/20">
                         <div className="text-center opacity-40">
-                            <img src="https://api.iconify.design/ph:star-four-thin.svg?color=%23c2b280" className="w-32 h-32 mx-auto mb-4" alt="Unique Icon" />
+                            <Sparkle className="w-32 h-32 mx-auto mb-4 text-asl-gold" strokeWidth={0.5} aria-hidden="true" />
                             <span className="font-serif italic text-asl-espresso">Experimental Concept</span>
                         </div>
                     </div>

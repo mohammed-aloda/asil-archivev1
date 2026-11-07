@@ -63,7 +63,7 @@ const Header: React.FC = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Shop', path: 'shop' },
+    { name: 'Shop', path: '/shop' },
     { name: 'About', path: '/about' },
     { name: 'Custom', path: '/custom' },
   ];
@@ -172,10 +172,13 @@ const Header: React.FC = () => {
                       }}
                       className="w-full py-1 pl-3 md:pl-4 pr-6 md:pr-8 text-xs md:text-sm bg-transparent outline-none text-asl-espresso placeholder-asl-espresso/50"
                       placeholder="Search..."
+                      aria-label="Search products"
+                      maxLength={100}
                     />
                     <button
                       type="button"
                       onClick={() => setIsSearchOpen(false)}
+                      aria-label="Close search"
                       className="absolute right-1 md:right-2 p-1 opacity-50 hover:opacity-100"
                     >
                       <X size={12} className="md:w-3.5 md:h-3.5" />
@@ -187,6 +190,7 @@ const Header: React.FC = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => setIsSearchOpen(true)}
+                    aria-label="Search"
                     className="hover:text-asl-gold transition-colors cursor-hover"
                   >
                     <Search size={18} className="md:w-5 md:h-5" />
@@ -195,8 +199,8 @@ const Header: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            <Link to="/profile" className="hidden md:block hover:text-asl-gold transition-colors cursor-hover"><User size={20} /></Link>
-            <button onClick={toggleCart} className="relative hover:text-asl-gold transition-colors cursor-hover">
+            <Link to="/profile" aria-label="Account" className="hidden md:block hover:text-asl-gold transition-colors cursor-hover"><User size={20} /></Link>
+            <button onClick={toggleCart} aria-label={`Open cart (${cartCount} items)`} className="relative hover:text-asl-gold transition-colors cursor-hover">
               <ShoppingBag size={18} className="md:w-5 md:h-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 w-3 h-3 md:w-4 md:h-4 bg-asl-gold text-white text-[8px] md:text-[10px] flex items-center justify-center rounded-full">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProducts } from '../context/ProductContext';
 import { Product } from '../types';
 
@@ -10,6 +10,24 @@ const Admin: React.FC = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [passwordInput, setPasswordInput] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    // If a valid session cookie already exists, skip the login screen
+    useEffect(() => {
+        fetch('/api/admin-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'check' }),
+        }).then(r => { if (r.ok) setIsAuthenticated(true); }).catch(() => { });
+    }, []);
+
+    const handleLogout = async () => {
+        await fetch('/api/admin-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'logout' }),
+        }).catch(() => { });
+        setIsAuthenticated(false);
+    };
 
     // MOVE ALL HOOKS HERE - BEFORE ANY RETURN
     const [formData, setFormData] = useState<Omit<Product, 'id'>>({
@@ -40,6 +58,9 @@ const Admin: React.FC = () => {
             });
             if (response.ok) {
                 setIsAuthenticated(true);
+                setPasswordInput(''); // don't keep the password in memory
+            } else if (response.status === 429) {
+                alert("Too many attempts. Please wait a few minutes.");
             } else {
                 alert("Incorrect Password");
             }
@@ -108,8 +129,8 @@ const Admin: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${passwordInput}`
                 },
+                credentials: 'same-origin', // sends the HttpOnly admin session cookie
                 body: JSON.stringify(formData),
             });
 
@@ -122,6 +143,9 @@ const Admin: React.FC = () => {
                     stripePriceId: data.stripePriceId
                 }));
                 alert(`Successfully synced! Stripe ID: ${data.stripeProductId}`);
+            } else if (response.status === 401) {
+                alert('Your admin session expired. Please log in again.');
+                setIsAuthenticated(false);
             } else {
                 alert(`Sync failed: ${data.error}`);
             }

@@ -8,7 +8,7 @@ const SizeGuide: React.FC = () => {
             {/* Background Texture */}
             <div
                 className="absolute inset-0 z-0 pointer-events-none opacity-[0.05] mix-blend-multiply"
-                style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/stardust.png')` }}
+                style={{ backgroundImage: `url('/assets/stardust.png')` }}
             />
 
             <div className="max-w-3xl mx-auto px-8 py-24 relative z-10">

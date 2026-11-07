@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import { useCurrency } from '../context/CurrencyContext';
+import { thumb, thumbFallback } from '../utils/images';
 
 interface ProductCardProps {
     product: Product;
@@ -34,7 +35,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <div className="aspect-[3/4] bg-asl-cream mb-4 flex items-center justify-center overflow-hidden relative">
                 {/* Main Image */}
                 <img
-                    src={product.image}
+                    src={thumb(product.image)}
+                    onError={thumbFallback(product.image)}
                     alt={product.name}
                     loading="lazy"
                     decoding="async"
@@ -45,7 +47,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Optimization: Only render into DOM if user has hovered at least once to save initial bandwidth */}
                 {hasSecondImage && hasLoadedSecondary && (
                     <img
-                        src={secondaryImage}
+                        src={thumb(secondaryImage)}
+                        onError={thumbFallback(secondaryImage)}
                         alt={`${product.name} alternate view`}
                         loading="lazy"
                         decoding="async"

@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
 import { PRODUCTS } from '../constants.js';
+import { rejectBadPost } from './_lib/security.js';
 
 const ALLOWED_CURRENCIES = ['CAD', 'USD'] as const;
 const ALLOWED_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '2XL', '3XL'];
@@ -11,10 +12,8 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+  // 20 checkout attempts per 10 minutes per IP
+  if (rejectBadPost(req, res, { name: 'checkout', limit: 20, windowMs: 10 * 60 * 1000 })) return;
 
   if (!process.env.STRIPE_SECRET_KEY) {
     console.error('STRIPE_SECRET_KEY is not defined in the environment variables.');

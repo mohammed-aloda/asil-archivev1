@@ -1,5 +1,22 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Product, CartItem } from '../types';
+import { PRODUCTS } from '../constants';
+
+const MAX_QTY = 20;
+
+// Rebuild saved cart items from the current product list, so old or edited
+// localStorage data can't show wrong prices or names.
+function restoreCart(raw: unknown): CartItem[] {
+    if (!Array.isArray(raw)) return [];
+    const items: CartItem[] = [];
+    for (const entry of raw) {
+        const product = PRODUCTS.find(p => p.id === String(entry?.id));
+        const quantity = Math.min(MAX_QTY, Math.max(1, Math.floor(Number(entry?.quantity) || 1)));
+        const size = typeof entry?.size === 'string' ? entry.size.slice(0, 5) : 'M';
+        if (product) items.push({ ...product, quantity, size });
+    }
+    return items;
+}
 
 interface CartContextType {
     cart: CartItem[];
@@ -20,7 +37,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Load from local storage
         try {
             const saved = localStorage.getItem('cart');
-            return saved ? JSON.parse(saved) : [];
+            return saved ? restoreCart(JSON.parse(saved)) : [];
         } catch (e) {
             console.error("Failed to parse cart from local storage", e);
             return [];
@@ -30,7 +47,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         // Save to local storage whenever cart changes
-        localStorage.setItem('cart', JSON.stringify(cart));
+        try {
+            localStorage.setItem('cart', JSON.stringify(cart.map(({ id, size, quantity }) => ({ id, size, quantity }))));
+        } catch {
+            // Storage may be unavailable (private mode); the cart still works for this visit
+        }
     }, [cart]);
 
     const addToCart = (product: Product, size: string) => {
@@ -39,7 +60,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (existing) {
                 return prev.map(item =>
                     item.id === product.id && item.size === size
-                        ? { ...item, quantity: item.quantity + 1 }
+                        ? { ...item, quantity: Math.min(MAX_QTY, item.quantity + 1) }
                         : item
                 );
             }
@@ -53,7 +74,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const updateQuantity = (productId: string, size: string, quantity: number) => {
-        if (quantity < 1) return;
+        if (quantity < 1 || quantity > MAX_QTY) return;
         setCart(prev => prev.map(item =>
             item.id === productId && item.size === size
                 ? { ...item, quantity }

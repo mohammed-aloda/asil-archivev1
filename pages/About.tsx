@@ -6,7 +6,7 @@ const AboutUs: React.FC = () => {
 
             {/* Background Texture Overlay */}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.05] mix-blend-multiply"
-                style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/stardust.png')` }}></div>
+                style={{ backgroundImage: `url('/assets/stardust.png')` }}></div>
 
             <div className="max-w-4xl mx-auto px-8 py-24 relative z-10">
 

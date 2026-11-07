@@ -1,17 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
-import { isAuthorizedRequest } from './_lib/auth.js';
+import { isAdminRequest } from './_lib/auth.js';
+import { rejectBadPost } from './_lib/security.js';
 
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+  if (rejectBadPost(req, res, { name: 'sync-stripe', limit: 30, windowMs: 60 * 1000 })) return;
 
-  if (!isAuthorizedRequest(req.headers.authorization)) {
+  if (!isAdminRequest(req)) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 

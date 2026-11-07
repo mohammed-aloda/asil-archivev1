@@ -38,10 +38,26 @@ const Cart = () => (
 );
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  // Play the logo intro once per browser session (not on every page load),
+  // and skip it for visitors who prefer reduced motion.
+  const [loading, setLoading] = useState(() => {
+    try {
+      if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
+      return sessionStorage.getItem('asil_intro_seen') !== '1';
+    } catch {
+      return true;
+    }
+  });
 
   if (loading) {
-    return <LogoAnimation onComplete={() => setLoading(false)} />;
+    return (
+      <LogoAnimation
+        onComplete={() => {
+          try { sessionStorage.setItem('asil_intro_seen', '1'); } catch { /* ignore */ }
+          setLoading(false);
+        }}
+      />
+    );
   }
 
   return (

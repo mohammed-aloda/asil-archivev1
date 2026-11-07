@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import nodemailer from 'nodemailer';
 import multer from 'multer';
+import { rejectBadPost } from './_lib/security.js';
 
 export const config = {
   api: {
@@ -52,10 +53,8 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+  // 5 requests per hour per IP (stops spam floods to the inbox)
+  if (rejectBadPost(req, res, { name: 'send-request', limit: 5, windowMs: 60 * 60 * 1000 })) return;
 
   // Check if environment variables are set
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -95,6 +94,11 @@ export default async function handler(
     const name = typeof body.name === 'string' ? body.name.trim().slice(0, 100) : '';
     const idea = typeof body.idea === 'string' ? body.idea.trim().slice(0, 5000) : '';
     const files = ((req as any).files || []) as any[];
+
+    // Honeypot: real visitors never see or fill the "website" field; bots do.
+    if (typeof body.website === 'string' && body.website.trim() !== '') {
+      return res.status(200).json({ message: 'Email sent successfully' });
+    }
 
     if (!name || !idea) {
       return res.status(400).json({ error: 'Name and idea are required.' });

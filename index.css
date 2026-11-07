@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
   body {
-    /* Hide default cursor globally only on desktop */
+    /* Hide default cursor only on desktops with a mouse (not tablets/touch) */
     cursor: none;
   }
 
